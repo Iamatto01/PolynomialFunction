@@ -1,21 +1,30 @@
+import numpy as np
 import matplotlib.pyplot as plt
 
-# Data
-years = [2023, 2022, 2021, 2020, 2019,2018,2017,2016,2015,2014]
-revenue = [490675, 433300, 331026, 308450, 374377,347684,313849,185943,288226,253667]
+# Data: years and revenue
+years = np.array([2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023])
+revenues = np.array([253667, 288226, 185943, 313849, 347684, 374377, 308450, 331026, 433300, 490675])
 
-# Create the plot
-plt.figure(figsize=(10, 10))
-plt.plot(years, revenue, marker='o')
+# Shift years to start from 0 for simplicity (2014 -> 0, ..., 2023 -> 9)
+years_shifted = years - 2014
 
-# Add titles and labels
-plt.title("Revenue Growth from 2019 to 2023 ")
-plt.xlabel("Year")
-plt.ylabel("Revenue (RM'000)")
+# Fit a cubic polynomial (degree 3)
+coeffs = np.polyfit(years_shifted, revenues, 3)
+polynomial = np.poly1d(coeffs)
 
-# Set x-axis ticks
-plt.xticks(years)
-    
-# Show the plot
+# Generate x values for plotting the polynomial
+x_vals = np.linspace(0, 9, 100)
+y_vals = polynomial(x_vals)
+
+# Plot the data and the polynomial
+plt.figure(figsize=(10, 6))
+plt.scatter(years, revenues, color='red', label='Actual Data')
+plt.plot(x_vals + 2014, y_vals, label=f'Fitted Polynomial: {polynomial}', color='blue')
+plt.xlabel('Year')
+plt.ylabel('Revenue (RM\'000)')
+plt.title('Revenue vs. Year with Fitted Polynomial')
+plt.legend()
 plt.grid(True)
 plt.show()
+
+print(f"Fitted Polynomial Equation:\n{polynomial}")
